@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<UIAddon>
+	<Name>StoryAddon</Name>
+	<AutoStart>true</AutoStart>
+
+	<localizedNameFileRef href="name.txt"/>
+	<localizedDescFileRef href="desc.txt"/>
+	
+	<ScriptFileRefs>
+		<Item href="/Mods/SampleCommon/SampleAddonBase.lua" />
+		<Item href="/Mods/SampleAddons/SampleEventRegistration/ScriptSampleEventRegistration.lua/" />
+		<Item href="/Mods/SampleAddons/SampleInit/ScriptSampleInit.lua/" />
+		<Item href="/Mods/SampleAddons/SampleReactionHandler/ScriptSampleReactionHandler.lua/" />
+		<Item href="/Mods/SampleAddons/SampleZoneAnnounce/ScriptSampleZoneAnnounce.lua/" />
+
+		<Item href="Scripts/StoryAddon.lua" />
+	</ScriptFileRefs>
+
+</UIAddon>
