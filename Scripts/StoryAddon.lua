@@ -18,21 +18,24 @@ local _BillingBonuses = common.GetAddonMainForm ("BillingBonuses")
 
 -- Имитация свича для классового аддона
 local swich = function (condition, results)
-
 	local exists = results[condition] or results["default"]
 	if type(exists) == "function" then
 		return exists()
 	end
 	return exists
 end
+-- Имитация свича для классового аддона
 
-local sysClassName = avatar.GetClass()
-local Class = nil
+
+local function InitUser()
+
+local sysClassName = avatar.GetClass() -- Получение класса
+local Class = nil -- Пустышка для класса
 
 local _ClassAddons = swich (sysClassName, {
 MAGE = function ()
 		local _ClassAddon = common.GetAddonMainForm ("ClassAddonMage")
-				Class = _ClassAddon
+				Class = _ClassAddon -- Пихаем полученный класс сюда
 		end,
 
 ENGINEER = function ()
@@ -40,15 +43,46 @@ ENGINEER = function ()
 				Class = _ClassAddon
 		end,
 
+DRUID = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonDruid")
+				Class = _ClassAddon
+		end,
+
+NECROMANCER = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonNecromancer")
+				Class = _ClassAddon
+		end,
+
+PALADIN = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonPaladin")
+				Class = _ClassAddon
+		end,
+		
+PSIONIC = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonPsionic")
+				Class = _ClassAddon
+		end,
+				
+WARLOCK = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonWarlock")
+				Class = _ClassAddon
+		end,
+						
+WARRION = function ()
+		local _ClassAddon = common.GetAddonMainForm ("ClassAddonWarrion")
+				Class = _ClassAddon
+		end,
+
 ['default'] = function ()
-			LogInfo("Фигня какая то случилась ")
+			local _ClassAddon = common.GetAddonMainForm ("NecroVision") -- Чтоб избежать ошибок на классах у которых нет классовых аддонов
+			Class = _ClassAddon 
 			end
 })
--- Имитация свича для классового аддона
+return Class -- Возращаем значене в InitUser()
+end
 
-LogInfo("Пожалуйста блять " , Class)
 
-		--Пихаем названия переменнх в массив
+--Пихаем названия переменнх в массив
 local AddonList = { _PinMenu, 
 		_BonusPool,
 		_QuestTracker,
@@ -63,14 +97,13 @@ local AddonList = { _PinMenu,
 		_EventNotification,
 		_ContextActions,
 		_BillingBonuses,
-		Class}
+		}
 
 
 -- Изменение диалоговых панелей.
 		-- Получение дочерних элементов NpcTalk
 local _NpcTalk = common.GetAddonMainForm ("NpcTalk")
 local NpcTalkChildren = _NpcTalk:GetNamedChildren()
-		
 		NpcTalkChildren[0]:SetSmartPlacementPlain( { sizeX = 495, sizeY = 754 } ) -- 1 Диалоговое окно 
 		NpcTalkChildren[1]:SetSmartPlacementPlain( { sizeX = 495, sizeY = 754, posX = 520 } ) -- 2 Диалоговое окно
 
@@ -80,22 +113,22 @@ local _NpcTalkDialogPanel = NpcTalkChildren[0]:GetNamedChildren()
 		_NpcTalkDialogPanel[2]:SetSmartPlacementPlain( { posY = 35 } ) -- Имя НПС
 		_NpcTalkDialogPanel[5]:SetSmartPlacementPlain( { highPosY = 25, highPosX = 40 } ) -- Кнопка выхода
 
-
 		-- Получение дочерних элементов 2 окно
 local _NpcTalkQuestPanel = NpcTalkChildren[1]:GetNamedChildren()
 		_NpcTalkQuestPanel[1]:SetSmartPlacementPlain( { sizeX = 455, sizeY = 593, posY = 81, highPosX = 17 } ) -- Изменение внутренного окна 
 		_NpcTalkQuestPanel[2]:SetSmartPlacementPlain( { posY = 35 } ) -- Имя НПС
 		_NpcTalkQuestPanel[3]:SetSmartPlacementPlain( { highPosY = 25, highPosX = 40 } ) -- Кнопка выхода
-
 -- Изменение диалоговых панелей.
 		
-		
+
 		-- Функции для скрытия/раскрытия элементов, данные берёт из массива TestList
 local function Start()
-			
+
 			for i = 1, #AddonList do
 				AddonList[i]:SetFade(0.0)
 			end	
+
+			InitUser():SetFade(0.0) -- Костыль
 
 end
 
@@ -105,9 +138,11 @@ local function Stop()
 				AddonList[i]:SetFade(1.0)
 			end	
 
-end
+			InitUser():SetFade(1.0) -- Костыль
 
+end
 
 		-- Какая то штука для функций 
 common.RegisterEventHandler ( Start, "EVENT_TALK_STARTED" )
 common.RegisterEventHandler ( Stop, "EVENT_TALK_STOPPED" )
+common.RegisterEventHandler( InitUser, "EVENT_AVATAR_CREATED" )
